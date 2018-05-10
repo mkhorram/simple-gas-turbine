@@ -11,9 +11,9 @@ function [ram_air, intake, compressor, combustor, turbine, nozzle, mech_feat] = 
 	ram_air = struct('P',p_h,  'ro',ro_h,  'T',T_h,  'cp',cp,  'gama',gama,  'M',M,   'm_dot',m_dot);
 	
 	%%%%%%%%%%%%%%%%%%%% intake
-	% M_out: intake out Mach number
+	% M_out: intake flow Mach number (mach number of flight for aircrafts, otherwise 0)
 	% efficiency: intake efficiency of output pressure
-	intake = struct('M_out',0.4,   'efficiency',0.99);
+	intake = struct('M_out',0,   'efficiency',0.99);
 	
 	%%%%%%%%%%%%%%%%%%%% compressor
 	% P_ratio: pressure ratio
@@ -36,6 +36,6 @@ function [ram_air, intake, compressor, combustor, turbine, nozzle, mech_feat] = 
 	nozzle = struct('efficiency',0.95);
 	
 	%%%%%%%%%%%%%%%%%%%% mechanical features
-	mech_feat = struct('APU',750,  'mech_efficiency',0.99);	% 200;	% 750;
+	mech_feat = struct('APU',500,  'mech_efficiency',0.99);	% consider 200-1000 watts for aircrafts;
 	
 end
