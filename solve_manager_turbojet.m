@@ -1,12 +1,13 @@
 
 function solve_manager_turbojet()
-	close(),	clear()
+	close(),   clear()
 	
-	[ram_air, intake, compressor, combustor, turbine, nozzle, mech_feat] = userdata_turbojet();
+	[ram_air, intake, compressor, combustor, turbine, nozzle, mech_loads] = userdata_turbojet();
 	
-	% [SFC, Thrust] = GT_solver_turbojet(ram_air, intake, compressor, combustor, turbine, nozzle, mech_feat);
+	% [SFC, Thrust] = GT_solver_turbojet(ram_air, intake, compressor, combustor, turbine, nozzle, mech_loads);
 	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%% iterative solution for plot points
+	% default plot area grid
 	nx = 25; ny = 35;
 	
 	SFC_matrix = zeros(ny,nx);
@@ -25,22 +26,24 @@ function solve_manager_turbojet()
 			
 			%%%% adjusting the mass flow by secant method to achieve 500N thrust
 			for kk=1:2
+				%%% secant root finding
+				% point 1
 				m_dot1 = ram_air.m_dot;
-				[SFC1, Thrust1] = GT_solver_turbojet(ram_air, intake, compressor, combustor, turbine, nozzle, mech_feat);
+				[SFC1, Thrust1] = GT_solver_turbojet(ram_air, intake, compressor, combustor, turbine, nozzle, mech_loads);
 				er_thrust1 = Thrust1 - 500;
-				
+				% point 2
 				m_dot2 = m_dot1*0.99;		ram_air.m_dot = m_dot2;
-				[SFC2, Thrust2] = GT_solver_turbojet(ram_air, intake, compressor, combustor, turbine, nozzle, mech_feat);
+				[SFC2, Thrust2] = GT_solver_turbojet(ram_air, intake, compressor, combustor, turbine, nozzle, mech_loads);
 				er_thrust2 = Thrust2 - 500;
-				
+				% estimating root
 				ram_air.m_dot = m_dot2 - (m_dot1-m_dot2)/(er_thrust1-er_thrust2) * er_thrust2;
 				
-				% [SFC, Thrust] = GT_solver_turbojet(ram_air, intake, compressor, combustor, turbine, nozzle, mech_feat);
+				% [SFC, Thrust] = GT_solver_turbojet(ram_air, intake, compressor, combustor, turbine, nozzle, mech_loads);
 				% [kk,  ram_air.m_dot,  SFC,  Thrust-500]    % checking the convergence
 			end
-			
+			%%% storing the results
 			m_dot_matrix(ii,jj) = ram_air.m_dot;
-			[SFC, Thrust] = GT_solver_turbojet(ram_air, intake, compressor, combustor, turbine, nozzle, mech_feat);
+			[SFC, Thrust] = GT_solver_turbojet(ram_air, intake, compressor, combustor, turbine, nozzle, mech_loads);
 			SFC_matrix(ii,jj) = SFC;
 			Thrust_matrix(ii,jj) = Thrust;
 		end
@@ -57,10 +60,9 @@ function solve_manager_turbojet()
 	hold on; h = plot(choosed_design_point(1),choosed_design_point(2),'*r'); set(h,'linewidth', 6)
 	
 	subplot(1,2,2);
-	contourf(T_max,P_ratio,m_dot_matrix);    title 'm_d_o_t (kg/s)'
+	contourf(T_max,P_ratio,m_dot_matrix);    title 'm-dot (kg/s)'
 	colorbar("location", "NorthOutside"),	xlabel 'Pressure Ratio',	ylabel 'Temperature (Kelvin)',	grid on
 	hold on; h = plot(choosed_design_point(1),choosed_design_point(2),'*r'); set(h,'linewidth', 6)
-	
 	
 end
 
