@@ -1,0 +1,25 @@
+This code has, by default, configured to compute the thrust of a micro-turbojet. However, the inputs could be changed for other types of Gas Turbines such as Auxiliary Power Units (APU) or Combined Heat and Power systems (CHP). The code is developed to run on both Matlab and GNU Octave. As a result, compatible coding was followed and the "standard_atmosphere.m" was developed to make codes compatible with both Matlab and Octave.
+
+How the code is organized:
+This software has various modules for calculation of output of every component. the implemented components are:
+1 - Air intake
+2 - Compressor
+3 - Combustor
+4 - Turbine
+5 - Nozzle
+The computational algorithms are lucid and explained by some comments to make modifications easy.
+
+How to configure the code for specific target simple gas turbine:
+The inputs of software are placed in "userdata_turbojet.m". The variable names are self-explanatory and subjectively organized for every component. Implemented components are listed as follow:
+1 - ram air for flight condition of flying object (gas properties, intake mass flow, Altitude and Mach number)
+2 - Air intake (output Mach and efficiency)
+3 - Compressor (pressure ratio, efficiency and mass flow loss portion)
+4 - Combustor (fuel energy density, combustion efficiency, max output temperature and combustor pressure drop)
+5 - Turbine (efficiency)
+6 - Nozzle (efficiency)
+7 - mechanical features (include APU) (extracted power as APU and mechanical efficiency)
+
+How to interpret results:
+the output of this code is, by default, a couple of contours which shows the Specific Fuel Consumption (SFC) and Mass flow for various pressure ratio and max turbine inlet temperatures for the target thrust of 500 N.
+
+the user can find the appropriate point of design for various parameters such as max turbine temperature, compressor pressure and efficiencies.
